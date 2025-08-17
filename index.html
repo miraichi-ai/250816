@@ -1,1 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code完全初心者講座｜2時間たっぷり解説！</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DotGothic16', sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-shadow: 2px 2px #000;
+        }
+        .font-press-start {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .pixel-border {
+            border-style: solid;
+            border-width: 4px;
+            border-image-slice: 2;
+            border-image-width: 2;
+            border-image-repeat: stretch;
+            border-image-source: url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="6" height="6"><g fill="white"><path d="M0,2 V4 H2 V6 H4 V4 H6 V2 H4 V0 H2 V2Z"/></g></svg>');
+            border-image-outset: 2;
+            position: relative;
+            background-color: #000084; /* 深い青 */
+        }
+        .pixel-border::after {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            bottom: -4px;
+            left: -4px;
+            content: "";
+            box-shadow: inset -4px -4px #000, inset 4px 4px #fff;
+        }
+        .text-shadow-custom {
+            text-shadow: 2px 2px 0px #000;
+        }
+        .card-hover:hover {
+            transform: scale(1.05) rotate(1deg);
+            background-color: #3c3cff;
+        }
+        .glitch {
+            animation: glitch 1.5s linear infinite;
+        }
+        @keyframes glitch {
+            2%, 64% {
+                transform: translate(2px, 0) skew(0deg);
+            }
+            4%, 60% {
+                transform: translate(-2px, 0) skew(0deg);
+            }
+            62% {
+                transform: translate(0, 0) skew(5deg);
+            }
+        }
+        .glitch-fast {
+            animation: glitch-fast 1s linear infinite;
+        }
+        @keyframes glitch-fast {
+            2%, 64% {
+                transform: translate(1px, -1px) skew(0deg);
+            }
+            4%, 60% {
+                transform: translate(-1px, 1px) skew(0deg);
+            }
+            62% {
+                transform: translate(1px, 1px) skew(2deg);
+            }
+        }
+    </style>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="font-press-start text-3xl sm:text-4xl md:text-5xl text-orange-500 glitch text-shadow-custom">CLAUDE CODE</h1>
+            <h2 class="font-press-start text-xl sm:text-2xl md:text-3xl text-white glitch-fast text-shadow-custom mt-2">完全初心者講座</h2>
+            <p class="mt-4 text-cyan-400 text-shadow-custom">（2025年8月16日） 🔸 まとめ図解リンク集</p>
+            <p class="mt-2 text-sm text-gray-400">※文字起こしデータを元に作成しているため、誤字脱字や情報の誤りなども含まれている可能性があります。予めご了承ください。</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Link Cards -->
+            <a href="1-seminar-overview.html" class="pixel-border p-5 block transition-transform duration-200 card-hover">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">第1章：セミナー概要</h3>
+                <p class="mt-2 text-base text-shadow-custom">講座の全体像とゴールを理解する最初のステップ。</p>
+            </a>
+            <a href="2-environment-setup.html" class="pixel-border p-5 block transition-transform duration-200 card-hover">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">第2章：開発環境の構築</h3>
+                <p class="mt-2 text-base text-shadow-custom">プログラミングの作業場を自分のPCに構築する。</p>
+            </a>
+            <a href="3-getting-started.html" class="pixel-border p-5 block transition-transform duration-200 card-hover">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">第3章：基本操作マスター</h3>
+                <p class="mt-2 text-base text-shadow-custom">Claude Codeのインストールと基本的な使い方を学ぶ。</p>
+            </a>
+            <a href="4-slash-commands.html" class="pixel-border p-5 block transition-transform duration-200 card-hover">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">第4章：スラッシュコマンド</h3>
+                <p class="mt-2 text-base text-shadow-custom">AIへの命令（コマンド）を使いこなし、作業を効率化。</p>
+            </a>
+            <a href="5-image-analysis.html" class="pixel-border p-5 block transition-transform duration-200 card-hover">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">第5章：画像解析機能</h3>
+                <p class="mt-2 text-base text-shadow-custom">デザインからコードを生成する、魔法のような機能を体験。</p>
+            </a>
+            <a href="6-advanced-workflow.html" class="pixel-border p-5 block transition-transform duration-200 card-hover">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">第6章：実践ワークフロー</h3>
+                <p class="mt-2 text-base text-shadow-custom">実際の開発現場で役立つ、効果的な使い方を学ぶ。</p>
+            </a>
+             <a href="7-claude-features.html" class="pixel-border p-5 block transition-transform duration-200 card-hover md:col-span-2">
+                <h3 class="font-press-start text-lg text-orange-400 text-shadow-custom">最終章：全機能の解説</h3>
+                <p class="mt-2 text-base text-shadow-custom">Claudeが持つ全ての能力を理解し、可能性を解放する。</p>
+            </a>
+        </main>
+
+        <footer class="text-center mt-12">
+            <p class="text-sm text-gray-500 font-press-start">-- PRESS START --</p>
+            <p class="text-xs text-gray-600 mt-2">© 2025 MIRAICHI NO ZUKAI. ALL RIGHTS RESERVED.</p>
+        </footer>
+    </div>
+</body>
+</html>
 
