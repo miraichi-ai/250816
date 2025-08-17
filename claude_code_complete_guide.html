@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code完全マスターガイド - 2時間セミナー完全図解版</title>
+    
+    <!-- Mermaid.js の読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                securityLevel: 'loose',
+                fontFamily: '"Kaisei Decol", sans-serif',
+                themeVariables: {
+                    primaryColor: '#3F77BF',
+                    primaryTextColor: '#333',
+                    primaryBorderColor: '#F2798F',
+                    lineColor: '#34BFBF',
+                    secondaryColor: '#F2C641',
+                    tertiaryColor: '#F2D1CE'
+                },
+                flowchart: {
+                    cornerRadius: 15,
+                    curve: 'cardinal',
+                    htmlLabels: true
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        /* カラーパレット定義 */
+        :root {
+            --main-color: #4CAF50;      /* メインカラー - 緑 */
+            --accent-1: #9575CD;        /* アクセント1 - 紫 */
+            --accent-2: #FFC107;        /* アクセント2 - 黄色 */
+            --accent-3: #009688;        /* アクセント3 - ティール */
+            --accent-4: #E91E63;        /* アクセント4 - ピンク */
+            --background: #FAFAFA;      /* 背景色 - ライトグレー */
+            --text-dark: #333;          /* ダークテキスト */
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kaisei Decol', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, var(--main-color), var(--accent-3));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .header h1::before {
+            content: "🎓";
+            position: absolute;
+            left: -60px;
+            top: 0;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* セクション */
+        .section {
+            background: white;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            border-left: 5px solid var(--main-color);
+        }
+
+        .section h2 {
+            color: var(--main-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: var(--accent-1);
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+            padding-left: 20px;
+            border-left: 3px solid var(--accent-2);
+        }
+
+        .section h4 {
+            color: var(--accent-3);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        /* アイコン作成 */
+        .icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .icon-install { background: var(--accent-1); }
+        .icon-commands { background: var(--accent-2); }
+        .icon-workflow { background: var(--accent-3); }
+        .icon-advanced { background: var(--accent-4); }
+        .icon-tips { background: var(--main-color); }
+
+        /* 専門用語の説明 */
+        .term {
+            background: var(--accent-2);
+            color: var(--text-dark);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 0 3px;
+        }
+
+        .explanation {
+            background: #FFF9C4;
+            border: 2px solid var(--accent-2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .explanation::before {
+            content: "💡";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: white;
+            padding: 0 5px;
+        }
+
+        /* コマンドボックス */
+        .command-box {
+            background: #2D3748;
+            color: #E2E8F0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .command-box::before {
+            content: "⚡ ターミナルコマンド";
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: var(--accent-3);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        /* ステップカード */
+        .step-card {
+            background: white;
+            border: 2px solid var(--accent-1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--accent-1);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* OS別タブ */
+        .os-tabs {
+            display: flex;
+            margin: 20px 0 0 0;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .os-tab {
+            background: #ddd;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .os-tab.active {
+            background: var(--main-color);
+            color: white;
+        }
+
+        .os-content {
+            display: none;
+            background: white;
+            border: 2px solid var(--main-color);
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+        }
+
+        .os-content.active {
+            display: block;
+        }
+
+        /* フローチャート用のコンテナ */
+        .mermaid-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* 例文ボックス */
+        .example-box {
+            background: #E8F5E8;
+            border: 2px solid var(--main-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .example-box h4 {
+            color: var(--main-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .example-box h4::before {
+            content: "📝";
+            margin-right: 8px;
+        }
+
+        /* 注意ボックス */
+        .warning-box {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box::before {
+            content: "⚠️ 重要なポイント";
+            display: block;
+            font-weight: bold;
+            color: #FF9800;
+            margin-bottom: 10px;
+        }
+
+        /* コマンド一覧表 */
+        .command-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .command-table th {
+            background: var(--main-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .command-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .command-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .command-table .command {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        /* トラブルシューティング */
+        .trouble-card {
+            background: #FFEBEE;
+            border: 2px solid #F44336;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .trouble-card h4 {
+            color: #F44336;
+            margin-bottom: 10px;
+        }
+
+        .trouble-card .solution {
+            background: #E8F5E8;
+            border: 1px solid var(--main-color);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .trouble-card .solution::before {
+            content: "✅ 解決方法: ";
+            font-weight: bold;
+            color: var(--main-color);
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header h1::before {
+                display: none;
+            }
+            
+            .section {
+                padding: 20px 15px;
+            }
+            
+            .os-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Claude Code完全マスターガイド</h1>
+            <p>2時間セミナー完全図解版 - ゼロから実践まで徹底解説</p>
+        </header>
+
+        <!-- 1. はじめに：Claude Codeとは何か -->
+        <section class="section">
+            <h2><span class="icon icon-install">🎯</span>Claude Codeとは何か？</h2>
+            
+            <h3>結論</h3>
+            <p><span class="term">Claude Code</span>は、<span class="term">ターミナル</span>（黒い画面）から直接AIのClaude（クロード）と会話できる革命的なツールです。従来のウェブブラウザでの操作とは異なり、プログラマーが普段使っている<span class="term">コマンドライン</span>環境で直接AIの力を借りることができます。</p>
+
+            <div class="explanation">
+                <strong>ターミナル</strong>とは、コンピューターに文字で命令を出すための黒い画面のことです。マウスではなく、キーボードで文字を打って操作します。<br>
+                <strong>コマンドライン</strong>とは、文字で命令を入力してコンピューターを操作する方法です。GUI（グラフィカルユーザーインターフェース）とは対照的な、プログラマー向けの操作方法です。
+            </div>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    flowchart LR
+                    A[従来の方法] --> B[ブラウザを開く]
+                    B --> C[Claude.aiにアクセス]
+                    C --> D[ログイン]
+                    D --> E[ようやく質問可能]
+                    
+                    F[Claude Code] --> G[ターミナルを開く]
+                    G --> H[claude と入力]
+                    H --> I[すぐに質問可能]
+                    
+                    style A fill:#FF6B6B,stroke:#333,stroke-width:2px,color:#fff
+                    style F fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                    style E fill:#FFE66D,stroke:#333,stroke-width:2px,color:#333
+                    style I fill:#6BCF7F,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+
+            <h3>結論に至る背景</h3>
+            <p>プログラマーは一日の大部分をターミナルで過ごします。コードを書き、テストを実行し、ファイルを操作する—これらの作業はすべてターミナル上で行われます。しかし、AIに相談したい時だけブラウザに切り替えるのは非効率的でした。Claude Codeは、この問題を解決するために開発されたツールです。</p>
+
+            <h3>具体例</h3>
+            <div class="example-box">
+                <h4>プログラマーの一日の作業パターン</h4>
+                <p><strong>9:00</strong> ターミナルでプロジェクト開始<br>
+                <strong>10:30</strong> エラーが発生 → ブラウザでClaude.aiを開いて質問<br>
+                <strong>10:45</strong> ターミナルに戻って作業継続<br>
+                <strong>11:30</strong> また疑問が発生 → またブラウザへ...<br><br>
+                <strong>Claude Code導入後:</strong><br>
+                <strong>10:30</strong> エラーが発生 → <code>claude</code>と入力してその場で質問<br>
+                <strong>10:33</strong> すぐに回答を得て作業継続</p>
+            </div>
+
+            <h3>例え話</h3>
+            <p>Claude Codeは、まるで<strong>作業台の隣に専門の先生がいる</strong>ような感じです。従来の方法は、疑問があるたびに別の部屋の図書館まで行って調べる必要がありましたが、Claude Codeなら作業中にすぐ隣の先生に「これってどうするの？」と気軽に聞けるのです。</p>
+
+            <h3>結論（まとめ）</h3>
+            <p>Claude Codeは、プログラマーの作業効率を劇的に向上させるツールです。ターミナルから離れることなく、AIの知識と力を活用できるため、集中を切らすことなく開発作業を続けることができます。</p>
+        </section>
+
+        <!-- 2. インストール方法完全ガイド -->
+        <section class="section">
+            <h2><span class="icon icon-install">💾</span>インストール方法完全ガイド</h2>
+
+            <h3>結論</h3>
+            <p>Claude Codeのインストールには、<span class="term">NPM</span>（Node Package Manager）または<span class="term">curl</span>コマンドを使用します。MacとWindowsで方法が異なりますが、どちらも<span class="term">依存関係</span>を自動で解決してくれる<span class="term">パッケージ管理ツール</span>を使用するため、複雑な設定は不要です。</p>
+
+            <div class="explanation">
+                <strong>NPM（Node Package Manager）</strong>とは、Node.jsのパッケージ（機能の塊）を管理するツールです。アプリをインストールする時の「アプリストア」のようなものです。<br>
+                <strong>curl</strong>とは、インターネット上のファイルをダウンロードするためのコマンドです。「コマンドライン版のブラウザ」と考えるとわかりやすいです。<br>
+                <strong>依存関係</strong>とは、あるソフトウェアが動作するために必要な他のソフトウェアのことです。<br>
+                <strong>パッケージ管理ツール</strong>とは、ソフトウェアのインストール、更新、削除を自動で行ってくれるツールです。
+            </div>
+
+            <div class="os-tabs">
+                <button class="os-tab active" onclick="showOS('mac')">Mac</button>
+                <button class="os-tab" onclick="showOS('windows')">Windows</button>
+            </div>
+
+            <div id="mac" class="os-content active">
+                <h4>Mac向けインストール手順</h4>
+                
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>前提条件の確認</h4>
+                    <p>まず、必要なツールが入っているか確認します：</p>
+                    <div class="command-box">
+$ npm -v
+$ brew -v
+                    </div>
+                    <p>どちらかが表示されればOKです。両方とも「command not found」と出る場合は、次のステップでインストールします。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Homebrewのインストール（必要な場合のみ）</h4>
+                    <p><span class="term">Homebrew</span>は、Macでソフトウェアを簡単にインストールできるツールです（ビールのマークが特徴的）：</p>
+                    <div class="explanation">
+                        <strong>Homebrew</strong>は「brew（醸造する）」という意味で、様々なソフトウェアを「醸造」してMacで使えるようにしてくれるツールです。
+                    </div>
+                    <div class="command-box">
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                    </div>
+                    <p>インストール中にパスワードを求められたら、Macのログインパスワードを入力してください。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Node.js（NPM含む）のインストール</h4>
+                    <p>HomebrewでNode.jsをインストールします：</p>
+                    <div class="command-box">
+$ brew install node
+                    </div>
+                    <p>これで自動的にNPMも一緒にインストールされます。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4>Claude Codeのインストール</h4>
+                    <div class="command-box">
+$ npm install -g @anthropic-ai/claude-code
+                    </div>
+                    <div class="explanation">
+                        <strong>-g</strong>オプションは「グローバルインストール」を意味します。これにより、どのフォルダからでも<code>claude</code>コマンドが使えるようになります。
+                    </div>
+                </div>
+            </div>
+
+            <div id="windows" class="os-content">
+                <h4>Windows向けインストール手順</h4>
+                
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>ネイティブインストール（推奨）</h4>
+                    <p>PowerShellまたはコマンドプロンプトで以下を実行：</p>
+                    <div class="command-box">
+curl -fsSL https://claude.ai/install.sh | sh
+                    </div>
+                    <p>これにより、Claude Codeが直接Windowsにインストールされます。</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>NPM経由でのインストール（代替方法）</h4>
+                    <p>Node.jsがインストールされている場合：</p>
+                    <div class="command-box">
+npm install -g @anthropic-ai/claude-code
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>Windowsでの注意点:</strong><br>
+                    WindowsでWSL（Windows Subsystem for Linux）を使用している場合は、Ubuntuなどのディストリビューション内でMacと同じ手順でインストールできます。
+                </div>
+            </div>
+
+            <h3>パッケージ管理ツールの重要性</h3>
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    flowchart TD
+                    A[Claude Codeを動かしたい] --> B[必要な依存関係]
+                    B --> C[Node.js Runtime]
+                    B --> D[HTTP Client]
+                    B --> E[Terminal UI Library]
+                    B --> F[File System Access]
+                    B --> G[その他30以上のライブラリ]
+                    
+                    H[NPMの働き] --> I[依存関係を自動検出]
+                    I --> J[必要なライブラリを自動ダウンロード]
+                    J --> K[バージョンの互換性チェック]
+                    K --> L[すべて自動でセットアップ完了]
+                    
+                    style A fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                    style H fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                    style L fill:#009688,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+
+            <h3>グローバルインストール vs ローカルインストール</h3>
+            <div class="example-box">
+                <h4>グローバルインストール（Claude Codeの場合）</h4>
+                <p><strong>メリット:</strong> どのフォルダからでも<code>claude</code>コマンドが使える<br>
+                <strong>仕組み:</strong> システムの<span class="term">PATH</span>にコマンドが登録される<br>
+                <strong>確認方法:</strong> <code>which claude</code>でインストール場所を確認可能</p>
+            </div>
+
+            <div class="explanation">
+                <strong>PATH（パス）</strong>とは、コンピューターがコマンドを探しに行く場所のリストです。図書館の目録のようなもので、「このコマンドはどこにあるか」を教えてくれます。
+            </div>
+
+            <h3>インストール確認方法</h3>
+            <div class="step-card">
+                <div class="step-number">✓</div>
+                <h4>正常にインストールされたかチェック</h4>
+                <div class="command-box">
+$ claude --version
+$ which claude
+$ echo $PATH
+                </div>
+                <p>これらのコマンドで、Claude Codeが正しくインストールされ、パスが通っていることを確認できます。</p>
+            </div>
+
+            <h3>結論（まとめ）</h3>
+            <p>Claude Codeのインストールは、適切なパッケージ管理ツールを使用することで、複雑な依存関係を自動で解決してくれます。グローバルインストールにより、どこからでもアクセスできる便利なツールとして使用できるようになります。</p>
+        </section>
+
+        <!-- 3. 必須コマンド完全マスター -->
+        <section class="section">
+            <h2><span class="icon icon-commands">⚡</span>Claude Code必須コマンド完全マスター</h2>
+
+            <h3>結論</h3>
+            <p>Claude Codeを効果的に使うには、<strong>基本コマンド</strong>、<strong>セッション管理コマンド</strong>、<strong>スラッシュコマンド</strong>の3つのカテゴリーを理解する必要があります。これらのコマンドを覚えることで、Claude Codeの全機能を活用できるようになります。</p>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    flowchart TD
+                    A[Claude Codeコマンド] --> B[基本コマンド]
+                    A --> C[セッション管理]
+                    A --> D[スラッシュコマンド]
+                    
+                    B --> B1[claude]
+                    B --> B2[claude -c]
+                    B --> B3[claude -r]
+                    B --> B4[Ctrl+C]
+                    
+                    C --> C1[履歴の継続]
+                    C --> C2[過去セッション復元]
+                    C --> C3[強制終了]
+                    
+                    D --> D1[/init]
+                    D --> D2[/model]
+                    D --> D3[/help]
+                    D --> D4[@ファイル名]
+                    
+                    style A fill:#4CAF50,stroke:#333,stroke-width:3px,color:#fff
+                    style B fill:#9575CD,stroke:#333,stroke-width:2px,color:#fff
+                    style C fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                    style D fill:#009688,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+
+            <h3>基本コマンド詳細解説</h3>
+
+            <h4>1. claude - 基本起動コマンド</h4>
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>新しいセッションを開始</h4>
+                <div class="command-box">
+$ claude
+</div>
+                <p>Claude Codeを起動します。初回起動時は認証設定が必要です。</p>
+                
+                <div class="example-box">
+                    <h4>初回起動時の設定</h4>
+                    <p><strong>1. Use API Key (1)</strong> - 従量課金制で使用<br>
+                    <strong>2. Use Browser Auth (2)</strong> - ProまたはMaxプランの枠内で使用</p>
+                </div>
+            </div>
+
+            <h4>2. claude -c - 最新セッション継続</h4>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>前回の会話を継続</h4>
+                <div class="command-box">
+$ claude -c
+</div>
+                <p><span class="term">-c</span>は「continue（継続）」の意味で、最後に行った会話の続きから開始できます。</p>
+                
+                <div class="explanation">
+                    これは非常に便利な機能で、昨日「Pythonのクラスについて」質問した続きで、今日「継承について」聞きたい場合などに使用します。
+                </div>
+            </div>
+
+            <h4>3. claude -r - 過去セッション選択復元</h4>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>過去の会話から選択して復元</h4>
+                <div class="command-box">
+$ claude -r
+</div>
+                <p><span class="term">-r</span>は「resume（再開）」の意味で、複数の過去セッションから選択して復元できます。</p>
+                
+                <div class="example-box">
+                    <h4>選択画面の例</h4>
+                    <p>1. Python基礎学習 (3日前)<br>
+                    2. React開発プロジェクト (1週間前)<br>
+                    3. データベース設計 (2週間前)</p>
+                </div>
+            </div>
+
+            <h3>スラッシュコマンド完全ガイド</h3>
+
+            <table class="command-table">
+                <thead>
+                    <tr>
+                        <th>コマンド</th>
+                        <th>機能</th>
+                        <th>使用場面</th>
+                        <th>重要度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">/init</span></td>
+                        <td>プロジェクト初期化・概要作成</td>
+                        <td>新しいプロジェクトの開始時</td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">/model</span></td>
+                        <td>AIモデルの変更</td>
+                        <td>より高性能なモデルが必要な時</td>
+                        <td>⭐⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">@ファイル名</span></td>
+                        <td>特定ファイルの参照</td>
+                        <td>ファイルについて質問したい時</td>
+                        <td>⭐⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">/help</span></td>
+                        <td>コマンド一覧表示</td>
+                        <td>使い方を忘れた時</td>
+                        <td>⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">/clear</span></td>
+                        <td>会話履歴をクリア</td>
+                        <td>新しい話題に切り替えたい時</td>
+                        <td>⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">!コマンド</span></td>
+                        <td>システムコマンド実行</td>
+                        <td>Claude内でLinuxコマンドを実行</td>
+                        <td>⭐⭐⭐</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>/initコマンドの詳細解説</h3>
+            <div class="step-card">
+                <div class="step-number">⚡</div>
+                <h4>/init - プロジェクト初期化の魔法</h4>
+                <p><span class="term">/init</span>コマンドは、現在のフォルダ内のファイルを分析し、プロジェクトの概要を自動生成してくれる非常に強力な機能です。</p>
+                
+                <div class="command-box">
+> /init
+プロジェクトを分析しています...
+📁 ファイル構成を確認中...
+📝 README.mdを生成中...
+</div>
+
+                <div class="example-box">
+                    <h4>自動生成される内容</h4>
+                    <p>• プロジェクトの目的と概要<br>
+                    • ファイル構成の説明<br>
+                    • 使用技術の一覧<br>
+                    • セットアップ手順<br>
+                    • 今後の開発方針</p>
+                </div>
+            </div>
+
+            <h3>日本語設定の重要性</h3>
+            <div class="warning-box">
+                <strong>Claude Codeを日本語で使用する設定</strong><br>
+                デフォルトでは英語で回答されるため、日本語設定が必要です。
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">🌏</div>
+                <h4>日本語設定手順</h4>
+                <p>ホームディレクトリ（~/.claude/）にclaude.mdファイルを作成：</p>
+                
+                <div class="command-box">
+$ cd ~/.claude
+$ code claude.md
+</div>
+
+                <p>ファイル内に以下を記述：</p>
+                <div class="command-box">
+Always respond in Japanese.
+すべての回答を日本語で行ってください。
+</div>
+
+                <div class="explanation">
+                    この設定により、Claude Codeのすべての回答が日本語になり、日本語での開発作業が格段に効率的になります。
+                </div>
+            </div>
+
+            <h3>高度なコマンド活用法</h3>
+
+            <h4>@ファイル参照の活用</h4>
+            <div class="example-box">
+                <h4>ファイル指定での質問例</h4>
+                <p><strong>コマンド:</strong> <code>@app.js このファイルのエラーを修正して</code><br>
+                <strong>結果:</strong> 指定したファイルの内容を読み取り、エラーを特定して修正案を提示</p>
+            </div>
+
+            <h4>!コマンドでのシステム操作</h4>
+            <div class="example-box">
+                <h4>Claude内でのLinuxコマンド実行</h4>
+                <p><strong>使用例:</strong> <code>!ls -la</code><br>
+                <strong>効果:</strong> Claude Codeを終了せずに、ファイル一覧を確認可能</p>
+            </div>
+
+            <h3>結論（まとめ）</h3>
+            <p>Claude Codeの必須コマンドをマスターすることで、AI支援による効率的な開発が可能になります。特に<code>/init</code>コマンドと日本語設定は、使用体験を劇的に改善する重要な機能です。これらのコマンドを組み合わせることで、プロフェッショナルレベルの開発効率を実現できます。</p>
+        </section>
+
+        <!-- 4. 実践的ワークフロー -->
+        <section class="section">
+            <h2><span class="icon icon-workflow">🔄</span>実践的ワークフロー完全ガイド</h2>
+
+            <h3>結論</h3>
+            <p>Claude Codeを使った効率的な開発ワークフローは、<strong>プロジェクト初期化</strong>、<strong>継続的な開発支援</strong>、<strong>トラブルシューティング</strong>、<strong>リファクタリング</strong>の4つのフェーズで構成されます。各フェーズで適切なコマンドを使い分けることで、開発効率を最大化できます。</p>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    flowchart TD
+                    A[新しいプロジェクト開始] --> B[claude で起動]
+                    B --> C[/init でプロジェクト分析]
+                    C --> D[README.md 自動生成]
+                    
+                    D --> E[開発フェーズ]
+                    E --> F{質問の種類}
+                    
+                    F --> G[コード生成要求]
+                    F --> H[エラー解決]
+                    F --> I[設計相談]
+                    
+                    G --> J[具体的な要求を伝える]
+                    H --> K[@ファイル名 でエラー解析]
+                    I --> L[claude -c で継続的相談]
+                    
+                    J --> M[コード実装]
+                    K --> M
+                    L --> M
+                    
+                    M --> N{プロジェクト完了？}
+                    N -->|No| E
+                    N -->|Yes| O[プロジェクト完成]
+                    
+                    style A fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                    style E fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                    style O fill:#009688,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+
+            <h3>フェーズ1: プロジェクト初期化ワークフロー</h3>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>プロジェクトフォルダの作成と移動</h4>
+                <div class="command-box">
+$ mkdir my-new-project
+$ cd my-new-project
+</div>
+                <div class="explanation">
+                    <strong>mkdir</strong>は「make directory」の略で、新しいフォルダを作成するコマンドです。<br>
+                    <strong>cd</strong>は「change directory」の略で、フォルダを移動するコマンドです。
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Claude Code起動とプロジェクト分析</h4>
+                <div class="command-box">
+$ claude
+> /init
+</div>
+                <p>この時点で何もファイルがなくても、Claude Codeはフォルダ名から推測してプロジェクトの提案をしてくれます。</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>初期ファイルの生成</h4>
+                <div class="example-box">
+                    <h4>実際のプロジェクト初期化例</h4>
+                    <p><strong>質問:</strong> 「シンプルなHTMLページを作成して」<br>
+                    <strong>Claude Codeの動作:</strong><br>
+                    • index.htmlファイルを自動作成<br>
+                    • 基本的なHTMLテンプレートを生成<br>
+                    • CSSファイルも必要に応じて作成<br>
+                    • 「ファイルを作成しますか？」と確認後、Yes で実行</p>
+                </div>
+            </div>
+
+            <h3>フェーズ2: 継続的開発支援ワークフロー</h3>
+
+            <h4>A. コード生成・拡張パターン</h4>
+            <div class="example-box">
+                <h4>段階的な機能追加</h4>
+                <p><strong>1日目:</strong> 基本的なHTMLページ作成<br>
+                <strong>2日目:</strong> <code>claude -c</code> で前回の続きから「CSSでスタイリングを追加」<br>
+                <strong>3日目:</strong> <code>claude -c</code> で「JavaScriptでインタラクティブ機能を追加」<br>
+                <strong>4日目:</strong> <code>claude -c</code> で「レスポンシブデザインに対応」</p>
+            </div>
+
+            <h4>B. エラー解決パターン</h4>
+            <div class="step-card">
+                <div class="step-number">🔧</div>
+                <h4>効率的なエラー解決手順</h4>
+                <ol>
+                    <li><strong>エラー発生:</strong> コードが動作しない</li>
+                    <li><strong>即座にClaude起動:</strong> <code>claude</code></li>
+                    <li><strong>ファイル指定で相談:</strong> <code>@problematic-file.js このファイルのエラーを解決して</code></li>
+                    <li><strong>エラーメッセージ共有:</strong> 「こんなエラーが出ています: [エラーメッセージ]」</li>
+                    <li><strong>修正案の実装:</strong> Claude Codeが提示する修正案を適用</li>
+                </ol>
+            </div>
+
+            <h3>フェーズ3: 高度な機能活用ワークフロー</h3>
+
+            <h4>複数ファイルの管理</h4>
+            <div class="command-box">
+> @app.js @style.css この2つのファイルの連携を改善して
+> @package.json 依存関係を最新バージョンに更新して
+> @README.md プロジェクトの説明を更新して
+</div>
+
+            <h4>モデルの使い分け</h4>
+            <table class="command-table">
+                <thead>
+                    <tr>
+                        <th>モデル</th>
+                        <th>特徴</th>
+                        <th>使用場面</th>
+                        <th>必要プラン</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Claude Sonnet</strong></td>
+                        <td>高速・効率的</td>
+                        <td>日常的な質問・簡単なコード生成</td>
+                        <td>Pro（20ドル/月）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude Opus</strong></td>
+                        <td>最高性能・詳細分析</td>
+                        <td>複雑な設計・高度な問題解決</td>
+                        <td>Max（100ドル/月）</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="command-box">
+> /model
+Available models:
+1. Claude Sonnet (Current)
+2. Claude Opus
+Select model: 2
+</div>
+
+            <h3>実際のプロジェクト例：ウェブアプリケーション開発</h3>
+
+            <div class="example-box">
+                <h4>完全なプロジェクト開発フロー</h4>
+                
+                <p><strong>Day 1: プロジェクト開始</strong></p>
+                <div class="command-box">
+$ mkdir todo-app
+$ cd todo-app
+$ claude
+> /init
+> シンプルなTodoアプリを作成したい
+</div>
+
+                <p><strong>Day 2: 機能拡張</strong></p>
+                <div class="command-box">
+$ claude -c
+> 昨日作ったTodoアプリにローカルストレージ機能を追加
+</div>
+
+                <p><strong>Day 3: デザイン改善</strong></p>
+                <div class="command-box">
+$ claude -c
+> Bootstrap を使ってデザインを改善
+</div>
+
+                <p><strong>Day 4: バグ修正</strong></p>
+                <div class="command-box">
+$ claude -c
+> @app.js 削除機能でエラーが出る問題を解決
+</div>
+            </div>
+
+            <h3>よくあるワークフローのパターン</h3>
+
+            <h4>パターン1: 学習型ワークフロー</h4>
+            <div class="trouble-card">
+                <h4>新しい技術を学びたい場合</h4>
+                <p><strong>問題:</strong> Reactを学びたいが、どこから始めればいいかわからない</p>
+                <div class="solution">
+                    1. <code>claude</code> でClaude Codeを起動<br>
+                    2. 「React学習の完全なロードマップを作成して」と依頼<br>
+                    3. <code>/init</code> で学習プロジェクトを初期化<br>
+                    4. 段階的に <code>claude -c</code> で継続学習
+                </div>
+            </div>
+
+            <h4>パターン2: 緊急修正ワークフロー</h4>
+            <div class="trouble-card">
+                <h4>本番環境でエラーが発生した場合</h4>
+                <p><strong>問題:</strong> ウェブサイトが突然動かなくなった</p>
+                <div class="solution">
+                    1. <code>claude</code> で即座に起動<br>
+                    2. <code>@エラーファイル</code> でファイル指定<br>
+                    3. エラーログをコピペして原因分析<br>
+                    4. 修正案を即座に実装
+                </div>
+            </div>
+
+            <h4>パターン3: リファクタリングワークフロー</h4>
+            <div class="trouble-card">
+                <h4>コードの品質を改善したい場合</h4>
+                <p><strong>問題:</strong> 古いコードを現代的に書き直したい</p>
+                <div class="solution">
+                    1. <code>claude -r</code> で過去のプロジェクトセッションを復元<br>
+                    2. <code>@全ファイル</code> で全体的な分析<br>
+                    3. 「モダンなベストプラクティスで書き直して」と依頼<br>
+                    4. 段階的にリファクタリングを実行
+                </div>
+            </div>
+
+            <h3>効率化のための上級テクニック</h3>
+
+            <h4>ショートカットの活用</h4>
+            <div class="command-box">
+# ファイル作成と同時にClaude Code起動
+$ touch app.js && claude
+
+# 複数ファイルを一度に参照
+> @*.js すべてのJavaScriptファイルを分析して
+
+# システムコマンドとの連携
+> !git status
+> 現在のGitの状態を分析して、次にするべきコミットを提案して
+</div>
+
+            <h3>結論（まとめ）</h3>
+            <p>Claude Codeの実践的ワークフローをマスターすることで、開発効率は飛躍的に向上します。プロジェクトの規模や性質に応じてコマンドを使い分け、継続的にAIの支援を受けることで、より高品質なコードをより短時間で作成できるようになります。重要なのは、各フェーズで適切なコマンドを選択し、AIとの対話を通じて段階的に開発を進めることです。</p>
+        </section>
+
+        <!-- 5. トラブルシューティング完全ガイド -->
+        <section class="section">
+            <h2><span class="icon icon-advanced">🔧</span>トラブルシューティング完全ガイド</h2>
+
+            <h3>結論</h3>
+            <p>Claude Codeでよく発生する問題は、<strong>パスの問題</strong>、<strong>認証エラー</strong>、<strong>インストール関連</strong>、<strong>セッション管理</strong>の4つのカテゴリーに分類できます。これらの問題の原因を理解し、適切な解決方法を知ることで、スムーズにClaude Codeを使用できます。</p>
+
+            <h3>よくある問題と解決方法</h3>
+
+            <h4>問題1: "command not found: claude"</h4>
+            <div class="trouble-card">
+                <h4>症状</h4>
+                <p><code>claude</code>と入力しても「command not found」エラーが表示される</p>
+                
+                <div class="solution">
+                    <strong>原因:</strong> パスが通っていない、またはインストールが不完全<br>
+                    <strong>解決手順:</strong><br>
+                    1. <code>which claude</code> でインストール場所を確認<br>
+                    2. <code>echo $PATH</code> でパスを確認<br>
+                    3. パスが通っていない場合: <code>export PATH=$PATH:/path/to/claude</code><br>
+                    4. 永続化するため ~/.zshrc または ~/.bashrc に追加
+                </div>
+            </div>
+
+            <h4>問題2: 認証エラー "API key not found"</h4>
+            <div class="trouble-card">
+                <h4>症状</h4>
+                <p>Claude Codeを起動すると認証に関するエラーが表示される</p>
+                
+                <div class="solution">
+                    <strong>解決手順:</strong><br>
+                    1. <code>claude</code> を再起動<br>
+                    2. 認証方法を選択し直す<br>
+                    3. API Key方式: Anthropicのダッシュボードから新しいAPIキーを取得<br>
+                    4. Browser Auth方式: ブラウザでClaude.aiにログインし直す
+                </div>
+            </div>
+
+            <h4>問題3: 日本語が文字化けする</h4>
+            <div class="trouble-card">
+                <h4>症状</h4>
+                <p>Claude Codeの回答が英語になる、または文字化けする</p>
+                
+                <div class="solution">
+                    <strong>解決手順:</strong><br>
+                    1. <code>cd ~/.claude</code> でClaude設定フォルダに移動<br>
+                    2. <code>nano claude.md</code> で設定ファイルを作成<br>
+                    3. 「Always respond in Japanese.」を記述<br>
+                    4. 保存後、Claude Codeを再起動
+                </div>
+            </div>
+
+            <h4>問題4: セッションが途切れる</h4>
+            <div class="trouble-card">
+                <h4>症状</h4>
+                <p>長時間使用していると突然接続が切れる</p>
+                
+                <div class="solution">
+                    <strong>原因:</strong> ネットワークの問題、またはサーバー側のタイムアウト<br>
+                    <strong>解決方法:</strong><br>
+                    1. <code>claude -c</code> で前回のセッションを復元<br>
+                    2. ネットワーク接続を確認<br>
+                    3. 定期的に何か入力して接続を維持
+                </div>
+            </div>
+
+            <h3>OS別の特殊な問題と解決方法</h3>
+
+            <div class="os-tabs">
+                <button class="os-tab active" onclick="showOS('mac-trouble')">Mac</button>
+                <button class="os-tab" onclick="showOS('windows-trouble')">Windows</button>
+            </div>
+
+            <div id="mac-trouble" class="os-content active">
+                <h4>Mac特有の問題</h4>
+                
+                <div class="trouble-card">
+                    <h4>Homebrew関連のエラー</h4>
+                    <p><strong>エラー:</strong> "brew: command not found"</p>
+                    <div class="solution">
+                        1. Homebrewが正しくインストールされているか確認<br>
+                        2. <code>/opt/homebrew/bin/brew --version</code> で直接確認<br>
+                        3. パスを手動で追加: <code>export PATH="/opt/homebrew/bin:$PATH"</code>
+                    </div>
+                </div>
+
+                <div class="trouble-card">
+                    <h4>zsh vs bash設定の競合</h4>
+                    <p><strong>症状:</strong> ターミナルを開き直すと設定が消える</p>
+                    <div class="solution">
+                        1. <code>echo $SHELL</code> で現在のシェルを確認<br>
+                        2. zshの場合: ~/.zshrc に設定を記述<br>
+                        3. bashの場合: ~/.bashrc に設定を記述
+                    </div>
+                </div>
+            </div>
+
+            <div id="windows-trouble" class="os-content">
+                <h4>Windows特有の問題</h4>
+                
+                <div class="trouble-card">
+                    <h4>PowerShell実行ポリシーエラー</h4>
+                    <p><strong>エラー:</strong> "execution of scripts is disabled on this system"</p>
+                    <div class="solution">
+                        1. PowerShellを管理者として実行<br>
+                        2. <code>Set-ExecutionPolicy RemoteSigned</code> を実行<br>
+                        3. 「Y」で確認<br>
+                        4. Claude Codeを再インストール
+                    </div>
+                </div>
+
+                <div class="trouble-card">
+                    <h4>WSL（Windows Subsystem for Linux）での問題</h4>
+                    <p><strong>症状:</strong> WSL内でClaude Codeが動作しない</p>
+                    <div class="solution">
+                        1. WSL2を使用していることを確認<br>
+                        2. WSL内で Linux用の手順でインストール<br>
+                        3. Windows側とWSL側で別々にインストールが必要
+                    </div>
+                </div>
+            </div>
+
+            <h3>パフォーマンス関連の問題</h3>
+
+            <h4>応答が遅い場合の対処法</h4>
+            <div class="example-box">
+                <h4>原因と対策</h4>
+                <p><strong>ネットワーク問題:</strong><br>
+                • Wi-Fi接続の確認<br>
+                • <code>ping claude.ai</code> で接続テスト<br><br>
+                
+                <strong>モデル負荷問題:</strong><br>
+                • <code>/model</code> でSonnetに変更（高速）<br>
+                • 複雑な質問を分割<br><br>
+                
+                <strong>セッション肥大化:</strong><br>
+                • <code>/clear</code> で履歴をクリア<br>
+                • 新しいセッションを開始</p>
+            </div>
+
+            <h3>ファイル関連の問題</h3>
+
+            <h4>ファイルが認識されない</h4>
+            <div class="trouble-card">
+                <h4>症状</h4>
+                <p><code>@filename</code> でファイルを指定しても「ファイルが見つからない」と表示される</p>
+                
+                <div class="solution">
+                    <strong>解決方法:</strong><br>
+                    1. <code>!ls</code> で現在のフォルダ内容を確認<br>
+                    2. 正確なファイル名を確認（大文字小文字、拡張子）<br>
+                    3. 相対パスまたは絶対パスで指定<br>
+                    4. ファイルの権限を確認: <code>!ls -la</code>
+                </div>
+            </div>
+
+            <h3>緊急時の対処法</h3>
+
+            <div class="warning-box">
+                <strong>Claude Codeが完全に動かなくなった場合の緊急手順</strong>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">🚨</div>
+                <h4>完全リセット手順</h4>
+                <div class="command-box">
+# 1. Claude Codeを完全アンインストール
+$ npm uninstall -g @anthropic-ai/claude-code
+
+# 2. 設定ファイルを削除
+$ rm -rf ~/.claude
+
+# 3. npmキャッシュをクリア
+$ npm cache clean --force
+
+# 4. 再インストール
+$ npm install -g @anthropic-ai/claude-code
+
+# 5. 設定を再構築
+$ claude
+</div>
+            </div>
+
+            <h3>予防的メンテナンス</h3>
+
+            <div class="example-box">
+                <h4>定期的に行うべきメンテナンス</h4>
+                <p><strong>週1回:</strong><br>
+                • Claude Codeのアップデート確認<br>
+                • 不要なセッション履歴の整理<br><br>
+                
+                <strong>月1回:</strong><br>
+                • NPMパッケージの更新<br>
+                • システム全体のクリーンアップ<br><br>
+                
+                <strong>問題発生前:</strong><br>
+                • 設定ファイルのバックアップ<br>
+                • 重要なセッション履歴のエクスポート</p>
+            </div>
+
+            <h3>サポートを求める際の情報収集</h3>
+
+            <div class="command-box">
+# 問題報告に必要な情報を収集
+$ claude --version
+$ node --version
+$ npm --version
+$ echo $SHELL
+$ echo $PATH
+$ uname -a  # Mac/Linux
+$ systeminfo | findstr /B /C:"OS Name" /C:"OS Version"  # Windows
+</div>
+
+            <h3>結論（まとめ）</h3>
+            <p>Claude Codeのトラブルシューティングでは、問題を正確に特定することが最も重要です。多くの問題はパス設定や認証に関連しており、基本的なコマンドラインの知識があれば解決できます。定期的なメンテナンスと適切な設定により、安定してClaude Codeを活用できるようになります。</p>
+        </section>
+
+        <!-- 6. 実際の活用事例と応用 -->
+        <section class="section">
+            <h2><span class="icon icon-tips">💼</span>実際の活用事例と応用テクニック</h2>
+
+            <h3>結論</h3>
+            <p>Claude Codeは、<strong>プログラマー専用ツール</strong>として設計されていますが、その活用範囲は非エンジニアにも広がります。営業・マネジメント職の方は、<strong>エンジニアチームとの協業効率化</strong>や<strong>技術理解の向上</strong>、<strong>AIツールの導入検討</strong>において大きな価値を得ることができます。</p>
+
+            <h3>職種別活用パターン</h3>
+
+            <h4>🔧 エンジニア向け活用事例</h4>
+            
+            <div class="example-box">
+                <h4>ケース1: 新技術の学習加速</h4>
+                <p><strong>状況:</strong> Reactを全く知らない状態から1週間でプロジェクトに参加する必要がある<br>
+                <strong>Claude Code活用:</strong></p>
+                <div class="command-box">
+Day 1: claude > "React完全初心者向けの学習計画を作成"
+Day 2: claude -c > "基本的なコンポーネントの作り方を教えて"
+Day 3: claude -c > "Hooksの使い方を実例で説明"
+Day 4: claude -c > "実際のプロジェクトに参加する準備"
+</div>
+                <p><strong>結果:</strong> 通常1ヶ月かかる学習を1週間に短縮</p>
+            </div>
+
+            <div class="example-box">
+                <h4>ケース2: レガシーコードのモダン化</h4>
+                <p><strong>状況:</strong> 5年前のjQueryコードをReactに移行する必要がある<br>
+                <strong>Claude Code活用:</strong></p>
+                <div class="command-box">
+> @old-jquery-app.js このjQueryコードをReactで書き直して
+> 段階的な移行計画も作成してください
+> SEOに影響しないように注意点も教えて
+</div>
+                <p><strong>結果:</strong> リファクタリング期間を70%短縮、モダンな開発手法を習得</p>
+            </div>
+
+            <h4>💼 営業・マネジメント職向け活用事例</h4>
+
+            <div class="example-box">
+                <h4>ケース3: 技術提案の精度向上</h4>
+                <p><strong>状況:</strong> クライアントから「AIを導入したい」という相談を受けた営業担当<br>
+                <strong>Claude Code活用:</strong></p>
+                <div class="command-box">
+> クライアントの業界は製造業、従業員500名
+> AIでコスト削減を図りたいという要望
+> 具体的な提案プランを作成して
+</div>
+                <p><strong>結果:</strong> 技術的に実現可能で具体的な提案ができ、受注率が向上</p>
+            </div>
+
+            <div class="example-box">
+                <h4>ケース4: 開発チームとのコミュニケーション改善</h4>
+                <p><strong>状況:</strong> エンジニアから「技術的負債」について相談されたマネージャー<br>
+                <strong>Claude Code活用:</strong></p>
+                <div class="command-box">
+> 技術的負債とは何か、ビジネスへの影響は？
+> 優先度を決める判断基準を教えて
+> 経営陣への説明資料を作成して
+</div>
+                <p><strong>結果:</strong> 適切な予算確保とプロジェクト計画の策定が可能になった</p>
+            </div>
+
+            <h3>業界別の活用シナリオ</h3>
+
+            <h4>🏭 製造業での活用</h4>
+            <div class="step-card">
+                <div class="step-number">📊</div>
+                <h4>生産管理システムの改善提案</h4>
+                <p><strong>課題:</strong> 古い生産管理システムの効率化が必要</p>
+                <div class="command-box">
+> 製造業の生産管理に適したシステム構成を提案
+> 在庫管理とのデータ連携方法も含めて
+> ROI計算も含めた導入計画書を作成
+</div>
+                <p><strong>効果:</strong> 具体的で実現可能な改善提案により、システム投資の説得材料を得られる</p>
+            </div>
+
+            <h4>🏥 医療・ヘルスケア業界での活用</h4>
+            <div class="step-card">
+                <div class="step-number">🩺</div>
+                <h4>電子カルテシステムの要件定義支援</h4>
+                <p><strong>課題:</strong> 電子カルテシステムの導入を検討中</p>
+                <div class="command-box">
+> 医療機関向け電子カルテシステムの要件定義
+> セキュリティ要件とプライバシー保護
+> 他システムとの連携仕様も含めて検討
+</div>
+                <p><strong>効果:</strong> 医療特有の要件を理解した上で、適切なシステム選定が可能</p>
+            </div>
+
+            <h3>チーム協働での活用方法</h3>
+
+            <h4>📝 プロジェクト設計書の共同作成</h4>
+            <div class="example-box">
+                <h4>非エンジニアとエンジニアの協働プロセス</h4>
+                <p><strong>ステップ1（非エンジニア）:</strong> ビジネス要件をClaude Codeで技術要件に翻訳<br>
+                <strong>ステップ2（エンジニア）:</strong> 技術要件をClaude Codeで実装計画に落とし込み<br>
+                <strong>ステップ3（共同）:</strong> 両者でClaude Codeを使ってリスク分析と対策検討</p>
+            </div>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    flowchart LR
+                    A[ビジネス要件] --> B[Claude Codeで翻訳]
+                    B --> C[技術要件定義]
+                    C --> D[エンジニア確認]
+                    D --> E[実装計画作成]
+                    E --> F[プロジェクト開始]
+                    
+                    G[非エンジニア] --> B
+                    H[エンジニア] --> D
+                    I[Claude Code] --> B
+                    I --> D
+                    
+                    style A fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                    style C fill:#9575CD,stroke:#333,stroke-width:2px,color:#fff
+                    style F fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                    style I fill:#E91E63,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+
+            <h3>学習・研修での活用</h3>
+
+            <h4>🎓 新人エンジニア研修プログラム</h4>
+            <div class="step-card">
+                <div class="step-number">📚</div>
+                <h4>段階的スキルアップカリキュラム</h4>
+                <p><strong>研修設計にClaude Codeを活用:</strong></p>
+                <div class="command-box">
+> 新卒エンジニア向け3ヶ月研修カリキュラム作成
+> HTML/CSS → JavaScript → React → Node.js の順序で
+> 毎週の実践課題と評価基準も含めて
+</div>
+                <p><strong>個別指導での活用:</strong></p>
+                <div class="command-box">
+> @新人のコード.js コードレビューして改善点を指摘
+> 初心者にもわかりやすい説明で
+> 次のステップの学習提案も含めて
+</div>
+            </div>
+
+            <h3>ROI（投資対効果）の測定</h3>
+
+            <div class="example-box">
+                <h4>Claude Code導入による効果測定</h4>
+                <p><strong>定量的効果:</strong><br>
+                • 開発時間: 平均30-50%短縮<br>
+                • バグ発生率: 20-30%減少<br>
+                • コードレビュー時間: 40%短縮<br>
+                • 新人研修期間: 50%短縮<br><br>
+                
+                <strong>定性的効果:</strong><br>
+                • エンジニアのストレス軽減<br>
+                • コードの品質向上<br>
+                • 技術的な意思決定の精度向上<br>
+                • チーム間のコミュニケーション改善</p>
+            </div>
+
+            <h3>導入時の注意点と課題</h3>
+
+            <div class="warning-box">
+                <strong>セキュリティとプライバシーの考慮</strong><br>
+                • 機密情報をClaude Codeで扱わない<br>
+                • 社内ガイドラインの策定<br>
+                • アクセスログの管理<br>
+                • 利用範囲の明確化
+            </div>
+
+            <h4>🔒 企業導入での推奨プラクティス</h4>
+            <div class="step-card">
+                <div class="step-number">🛡️</div>
+                <h4>安全な運用のためのガイドライン</h4>
+                <ul>
+                    <li><strong>対象データ:</strong> 一般的な技術情報のみ</li>
+                    <li><strong>禁止事項:</strong> 顧客情報、機密仕様、APIキーなどの共有禁止</li>
+                    <li><strong>利用記録:</strong> 重要な判断に影響した場合は利用記録を保存</li>
+                    <li><strong>継続教育:</strong> 定期的な安全利用研修の実施</li>
+                </ul>
+            </div>
+
+            <h3>将来の発展可能性</h3>
+
+            <div class="example-box">
+                <h4>Claude Codeの進化により期待される機能</h4>
+                <p><strong>短期予想（1年以内）:</strong><br>
+                • より高速な応答<br>
+                • 画像・動画ファイルの直接分析<br>
+                • リアルタイムコラボレーション機能<br><br>
+                
+                <strong>中長期予想（3年以内）:</strong><br>
+                • 完全自動コード生成<br>
+                • 音声インターフェース<br>
+                • 企業専用モデルのカスタマイズ<br>
+                • 他開発ツールとの完全統合</p>
+            </div>
+
+            <h3>結論（まとめ）</h3>
+            <p>Claude Codeは単なる開発ツールを超えて、組織全体の技術リテラシー向上と協業効率化を実現するプラットフォームです。エンジニアにとっては開発効率の劇的向上を、非エンジニアにとっては技術的な意思決定の精度向上をもたらします。適切な導入計画と安全な運用ガイドラインにより、組織の競争力を大幅に強化できる革新的なツールといえるでしょう。</p>
+        </section>
+
+        <!-- フッター -->
+        <footer style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, var(--accent-1), var(--accent-4)); color: white; border-radius: 15px;">
+            <h3>Claude Code完全マスターへの道</h3>
+            <p>2時間の集中セミナー内容を完全図解！<br>これでClaude Codeの全機能を理解し、実践的に活用できるようになりました</p>
+            <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">💡 継続的な学習と実践により、AI支援開発の真の価値を体験してください</p>
+        </footer>
+    </div>
+
+    <script>
+        function showOS(osName) {
+            // すべてのタブとコンテンツを非アクティブにする
+            const tabs = document.querySelectorAll('.os-tab');
+            const contents = document.querySelectorAll('.os-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 選択されたタブとコンテンツをアクティブにする
+            event.target.classList.add('active');
+            document.getElementById(osName).classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クロードコード完全初心者ガイド - スラッシュコマンド詳細解説</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Mermaid.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                securityLevel: 'loose',
+                fontFamily: '"Kaisei Decol", sans-serif',
+                themeVariables: {
+                    primaryColor: '#4CAF50',
+                    primaryTextColor: '#fff',
+                    primaryBorderColor: '#FFC107',
+                    lineColor: '#009688',
+                    secondaryColor: '#9575CD',
+                    tertiaryColor: '#E91E63'
+                },
+                flowchart: {
+                    cornerRadius: 15,
+                    curve: 'cardinal',
+                    htmlLabels: true
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F0F4F8 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #4CAF50 0%, #009688 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-family: 'Kaisei Decol', serif;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .section h2 {
+            color: #4CAF50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-family: 'Kaisei Decol', serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section h3 {
+            color: #009688;
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #E0F2F1;
+        }
+        
+        .icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .icon-terminal {
+            background: linear-gradient(135deg, #9575CD, #673AB7);
+            color: white;
+        }
+        
+        .icon-command {
+            background: linear-gradient(135deg, #FFC107, #FF9800);
+            color: white;
+        }
+        
+        .icon-config {
+            background: linear-gradient(135deg, #E91E63, #C2185B);
+            color: white;
+        }
+        
+        .icon-file {
+            background: linear-gradient(135deg, #009688, #00796B);
+            color: white;
+        }
+        
+        .command-box {
+            background: linear-gradient(135deg, #263238 0%, #37474F 100%);
+            color: #A5F3FC;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .command-box::before {
+            content: "💻";
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .command-item {
+            background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .command-item:hover {
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+        }
+        
+        .command-name {
+            font-weight: bold;
+            color: #9575CD;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border: 2px solid #FFC107;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .highlight-box h4 {
+            color: #F57F17;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+            border: 2px solid #E91E63;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning-box h4 {
+            color: #C2185B;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .process-flow {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            background: #4CAF50;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            font-weight: bold;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #4CAF50 0%, #009688 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #F8F9FA;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #E8F5E8;
+        }
+        
+        .analogy-box {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border: 2px solid #9575CD;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .analogy-box h4 {
+            color: #7B1FA2;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .command-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 クロードコード完全初心者ガイド</h1>
+            <p>スラッシュコマンドを使いこなして、AIコーディングをマスターしよう！</p>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon icon-terminal">🖥️</span>クロードコードのスラッシュコマンドとは</h2>
+            
+            <h3>📋 結論</h3>
+            <p><strong>スラッシュコマンド（Slash Commands）</strong>とは、クロードコード内で使える特別な命令のことです。コマンドの前に「/」（スラッシュ）を付けることで、クロードに特定の動作をしてもらえます。</p>
+            
+            <h3>🔍 背景：なぜスラッシュコマンドが必要なのか</h3>
+            <p>普通にクロードと会話するだけでも十分ですが、スラッシュコマンドを使うことで以下のメリットがあります：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>効率性</strong>：決まった動作を素早く実行できる</li>
+                <li><strong>正確性</strong>：意図が明確に伝わり、誤解が減る</li>
+                <li><strong>専門性</strong>：プログラミング特有の操作に特化している</li>
+            </ul>
+            
+            <div class="analogy-box">
+                <h4>🌟 例え話：レストランでの注文</h4>
+                <p>普通の会話は「何か美味しいものが食べたいです」と言うようなもの。スラッシュコマンドは「ラーメン大盛り、チャーシュー抜き」のように具体的に注文するようなものです。どちらも通じますが、後者の方が確実で早いですよね。</p>
+            </div>
+
+            <div class="process-flow">
+                <h3>🔄 スラッシュコマンドの基本的な流れ</h3>
+                <div class="mermaid">
+                    flowchart TD
+                        A[クロードコードを起動] --> B[/を入力]
+                        B --> C[コマンド名を入力]
+                        C --> D[Enter で実行]
+                        D --> E[クロードが処理実行]
+                        E --> F[結果表示]
+                        
+                        style A fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                        style B fill:#FFC107,stroke:#333,stroke-width:2px,color:#000
+                        style C fill:#9575CD,stroke:#333,stroke-width:2px,color:#fff
+                        style D fill:#009688,stroke:#333,stroke-width:2px,color:#fff
+                        style E fill:#E91E63,stroke:#333,stroke-width:2px,color:#fff
+                        style F fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon icon-command">⚡</span>必須スラッシュコマンド詳細解説</h2>
+            
+            <div class="command-list">
+                <div class="command-item">
+                    <div class="command-name">/init</div>
+                    <p><strong>機能</strong>：プロジェクトの初期分析を行う</p>
+                    <p><strong>用途</strong>：新しいプロジェクトの構造を理解したい時</p>
+                    <p><strong>実行例</strong>：プロジェクト全体の概要とファイル構成を日本語で説明してくれる</p>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-name">/model</div>
+                    <p><strong>機能</strong>：AIモデルの切り替え</p>
+                    <p><strong>用途</strong>：処理速度や精度を調整したい時</p>
+                    <p><strong>種類</strong>：Sonnet（高速・標準）、Opus（高精度・$100+プラン限定）</p>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-name">/logout</div>
+                    <p><strong>機能</strong>：アカウントからログアウト</p>
+                    <p><strong>用途</strong>：別のアカウントに切り替えたい時</p>
+                    <p><strong>注意</strong>：セッション情報がリセットされる</p>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-name">@ファイル名</div>
+                    <p><strong>機能</strong>：特定のファイルを指定して操作</p>
+                    <p><strong>用途</strong>：大量のファイルから特定のものを選択したい時</p>
+                    <p><strong>例</strong>：@index.html と入力してHTMLファイルについて質問</p>
+                </div>
+            </div>
+            
+            <h3>🎯 各コマンドの具体的な使用例</h3>
+            
+            <div class="step-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>/init の使用例</h4>
+                    <div class="command-box">claude<br/>/init</div>
+                    <p>→ プロジェクト全体の分析結果を日本語で表示</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>/model の使用例</h4>
+                    <div class="command-box">claude<br/>/model</div>
+                    <p>→ 利用可能なモデル一覧から選択</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>@の使用例</h4>
+                    <div class="command-box">claude<br/>@index.html このファイルを分析して</div>
+                    <p>→ 指定したファイルのみを対象に分析</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon icon-config">🌏</span>日本語設定の重要性と設定方法</h2>
+            
+            <h3>📋 結論</h3>
+            <p>クロードコードは<strong>デフォルトで英語</strong>で動作しますが、設定ファイルを作成することで<strong>日本語での回答</strong>を得られるようになります。</p>
+            
+            <h3>🔍 背景：なぜ日本語設定が必要なのか</h3>
+            <p>英語での回答は以下の問題があります：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>理解に時間がかかる</li>
+                <li>細かなニュアンスが伝わりにくい</li>
+                <li>初心者には敷居が高い</li>
+                <li>日本語のコメントやドキュメントとの整合性が取れない</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <h4>🎯 ハイライト：設定ファイルの作成手順</h4>
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4>ホームディレクトリに移動</h4>
+                        <div class="command-box">cd ~</div>
+                        <p>チルダ（~）は「ホームディレクトリ」を意味する</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4>.claudeフォルダの確認・作成</h4>
+                        <div class="command-box">ls -a | grep .claude<br/>mkdir .claude</div>
+                        <p>隠しフォルダ（.で始まる）を作成</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4>設定ファイルの作成</h4>
+                        <div class="command-box">cd .claude<br/>code claude.md</div>
+                        <p>VS Codeで設定ファイルを開く</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h4>日本語設定の記述</h4>
+                        <div class="command-box">Always respond in Japanese</div>
+                        <p>この一行を記述して保存</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analogy-box">
+                <h4>🌟 例え話：辞書の設定</h4>
+                <p>この設定は、スマートフォンの言語設定のようなものです。一度設定すれば、その後すべてのアプリが日本語で表示されるように、クロードも日本語で回答してくれるようになります。</p>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ 注意点</h4>
+                <p><strong>/help</strong>などの一部のシステムコマンドは、設定に関係なく英語で表示される場合があります。これはシステムの仕様です。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon icon-file">📁</span>モデル切り替えとファイル操作の詳細</h2>
+            
+            <h3>📋 結論</h3>
+            <p><strong>/model</strong>コマンドと<strong>@ファイル指定</strong>を組み合わせることで、効率的なコーディング作業が可能になります。</p>
+            
+            <h3>🔍 背景：モデルの違いとは</h3>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>モデル名</th>
+                        <th>特徴</th>
+                        <th>速度</th>
+                        <th>精度</th>
+                        <th>料金プラン</th>
+                        <th>適用場面</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sonnet</strong></td>
+                        <td>バランス型</td>
+                        <td>⚡ 高速</td>
+                        <td>📊 高精度</td>
+                        <td>$20+</td>
+                        <td>日常的なコーディング作業</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Opus</strong></td>
+                        <td>最高性能</td>
+                        <td>🐌 やや低速</td>
+                        <td>🎯 最高精度</td>
+                        <td>$100+</td>
+                        <td>複雑な問題解決・重要なプロジェクト</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>💡 具体的な使用例</h3>
+            
+            <div class="analogy-box">
+                <h4>🌟 例え話：車の選択</h4>
+                <p>Sonnetは「普通車」、Opusは「高級車」のようなものです。日常の移動（コーディング）には普通車で十分ですが、特別な場面（複雑なプロジェクト）では高級車の性能が必要になります。</p>
+            </div>
+            
+            <div class="process-flow">
+                <h3>🔄 効率的なワークフロー</h3>
+                <div class="mermaid">
+                    flowchart TD
+                        A[プロジェクト開始] --> B[/init でプロジェクト分析]
+                        B --> C{複雑度の判断}
+                        C -->|簡単| D[Sonnetモデル使用]
+                        C -->|複雑| E[Opusモデルに切り替え]
+                        D --> F[@ファイル名でファイル指定]
+                        E --> F
+                        F --> G[具体的な作業指示]
+                        G --> H[結果確認]
+                        H --> I[必要に応じてモデル変更]
+                        
+                        style A fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+                        style C fill:#FFC107,stroke:#333,stroke-width:2px,color:#000
+                        style D fill:#9575CD,stroke:#333,stroke-width:2px,color:#fff
+                        style E fill:#E91E63,stroke:#333,stroke-width:2px,color:#fff
+                        style H fill:#009688,stroke:#333,stroke-width:2px,color:#fff
+                </div>
+            </div>
+            
+            <h3>📝 実践的なコマンド組み合わせ例</h3>
+            
+            <div class="command-list">
+                <div class="command-item">
+                    <div class="command-name">初期分析 → ファイル操作</div>
+                    <div class="command-box">/init<br/>@src/main.js このファイルをリファクタリングして</div>
+                    <p>プロジェクト全体を把握してから特定ファイルを改善</p>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-name">モデル切り替え → 複雑な作業</div>
+                    <div class="command-box">/model<br/>（Opusを選択）<br/>@database.js パフォーマンス最適化を提案して</div>
+                    <p>高精度モデルで重要な最適化作業を実行</p>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-name">複数ファイル指定</div>
+                    <div class="command-box">@index.html @style.css @script.js<br/>これらのファイルの整合性をチェックして</div>
+                    <p>関連する複数ファイルを同時に分析</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon icon-terminal">🎓</span>まとめ：クロードコードマスターへの道</h2>
+            
+            <h3>📋 最終結論</h3>
+            <p>スラッシュコマンドは、クロードコードを効率的に活用するための<strong>必須スキル</strong>です。基本的なコマンドを覚えることで、AIとの協働プログラミングが劇的に改善されます。</p>
+            
+            <div class="highlight-box">
+                <h4>🏆 マスターレベルまでのロードマップ</h4>
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">初級</div>
+                        <h4>基本コマンドの習得</h4>
+                        <p>/init、/model、@ファイル指定を日常的に使用</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">中級</div>
+                        <h4>効率的な組み合わせ</h4>
+                        <p>状況に応じてコマンドを組み合わせて使用</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">上級</div>
+                        <h4>プロジェクト全体の管理</h4>
+                        <p>大規模プロジェクトでクロードコードを活用</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analogy-box">
+                <h4>🌟 最終的な例え話：楽器の演奏</h4>
+                <p>スラッシュコマンドは、楽器の基本的な演奏技術のようなものです。最初は一つずつ覚えて練習し、慣れてくると自然に組み合わせて美しい「プログラム」という音楽を奏でることができるようになります。</p>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ 覚えておくべき重要ポイント</h4>
+                <ul style="margin-left: 20px;">
+                    <li><strong>日本語設定</strong>は必須（~/.claude/claude.md に設定）</li>
+                    <li><strong>モデル選択</strong>は作業の複雑さに応じて決める</li>
+                    <li><strong>ファイル指定</strong>で作業効率が大幅に向上</li>
+                    <li><strong>練習</strong>が上達の一番の近道</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #4CAF50 0%, #009688 100%); color: white; border-radius: 15px;">
+                <h3>🚀 今すぐクロードコードで実践してみよう！</h3>
+                <p>このガイドを参考に、実際にコマンドを試して、AIとの協働プログラミングの世界を楽しんでください。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code画像分析機能：完全図解ガイド</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                securityLevel: 'loose',
+                fontFamily: '"Kaisei Decol", sans-serif',
+                themeVariables: {
+                    primaryColor: '#3F77BF',
+                    primaryTextColor: '#fff',
+                    primaryBorderColor: '#F2798F',
+                    lineColor: '#34BFBF',
+                    secondaryColor: '#F2C641',
+                    tertiaryColor: '#F2D1CE'
+                },
+                flowchart: {
+                    cornerRadius: 15,
+                    curve: 'cardinal',
+                    htmlLabels: true
+                }
+            });
+        });
+    </script>
+    <style>
+        :root {
+            --main-color: #4CAF50;
+            --accent-1: #9575CD;
+            --accent-2: #FFC107;
+            --accent-3: #009688;
+            --accent-4: #E91E63;
+            --bg-color: #FAFAFA;
+            --text-color: #333;
+            --border-radius: 15px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --gradient-1: linear-gradient(135deg, var(--main-color), var(--accent-3));
+            --gradient-2: linear-gradient(135deg, var(--accent-1), var(--accent-4));
+            --gradient-3: linear-gradient(135deg, var(--accent-2), #ff9800);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--gradient-1);
+            color: white;
+            text-align: center;
+            padding: 80px 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 15px,
+                rgba(255,255,255,0.1) 15px,
+                rgba(255,255,255,0.1) 30px
+            );
+            animation: slide 25s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(50px) translateY(50px); }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            margin: 40px 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .section-header {
+            padding: 40px 40px 30px;
+            background: var(--gradient-2);
+            color: white;
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-3), var(--main-color));
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-content {
+            padding: 40px;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 6px solid var(--main-color);
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            position: relative;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        .concept-box::before {
+            content: '💡';
+            position: absolute;
+            top: -12px;
+            left: -18px;
+            background: var(--main-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .concept-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--main-color);
+            margin-bottom: 18px;
+            margin-left: 35px;
+        }
+
+        .explanation {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 3px dashed var(--accent-2);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+
+        .explanation::before {
+            content: '🔍 詳細解説';
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            background: var(--accent-2);
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .method-box {
+            background: white;
+            border: 3px solid transparent;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .method-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--main-color);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .method-number {
+            background: var(--main-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .method-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--main-color);
+        }
+
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        .code-example::before {
+            content: '💻 コード例';
+            position: absolute;
+            top: -12px;
+            left: 25px;
+            background: #333;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 600;
+        }
+
+        .command {
+            color: #4FC3F7;
+            font-weight: 600;
+        }
+
+        .output {
+            color: #81C784;
+            margin-top: 8px;
+        }
+
+        .error {
+            color: #F48FB1;
+            margin-top: 8px;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid var(--main-color);
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+
+        .analogy-box::before {
+            content: '🏗️ 例え話で理解';
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            background: var(--main-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .step-container {
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin: 25px 0;
+            padding: 25px 25px 25px 70px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            position: relative;
+            border-left: 4px solid var(--accent-3);
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-3);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .good-practice {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 3px solid var(--main-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .bad-practice {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border: 3px solid var(--accent-4);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .vs-divider {
+            background: var(--accent-2);
+            color: #333;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .use-case {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--accent-1);
+        }
+
+        .use-case:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .use-case h4 {
+            color: var(--accent-1);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, transparent 0%, var(--accent-2) 0%, var(--accent-2) 100%, transparent 100%);
+            background-size: 0% 100%;
+            background-repeat: no-repeat;
+            animation: highlight 0.8s ease-in-out;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        @keyframes highlight {
+            0% { background-size: 0% 100%; }
+            100% { background-size: 100% 100%; }
+        }
+
+        .term {
+            background: var(--accent-2);
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin: 0 3px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .mermaid {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin: 25px 0;
+            box-shadow: var(--shadow);
+            border: 2px solid #f0f0f0;
+        }
+
+        .summary-box {
+            background: var(--gradient-1);
+            color: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .summary-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left: 6px solid var(--accent-2);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            position: relative;
+        }
+
+        .tip-box::before {
+            content: '💡 プロのコツ';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--accent-2);
+            color: #333;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .workflow-step {
+            background: white;
+            border: 2px solid var(--accent-3);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            border-color: var(--main-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .workflow-step::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            top: -2px;
+            bottom: -2px;
+            width: 4px;
+            background: var(--accent-3);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .vs-divider {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header p {
+                font-size: 1.1rem;
+            }
+            
+            .section-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📸 Claude Code画像分析機能</h1>
+            <p>コードベースでの画像活用を完全マスター！ドラッグ&ドロップからAI分析まで詳細図解</p>
+        </header>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><span class="icon">🖼️</span>画像をClaude Codeに追加する3つの方法</h2>
+                <p>ドラッグ&ドロップ、コピー&ペースト、ファイルパス指定の完全ガイド</p>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <div class="concept-title">結論：3つの画像追加方法をマスターしよう</div>
+                    <p><span class="term">Claude Code</span>では、<span class="highlight">3つの異なる方法</span>で画像を会話に追加できます。それぞれに<span class="term">メリット（利点）</span>と<span class="term">デメリット（欠点）</span>があり、状況に応じて使い分けることで、開発効率を大幅に向上させることができます。</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>なぜ複数の画像追加方法が必要なのか？</h4>
+                    <p>開発現場では様々な状況があります。<span class="term">スクリーンショット（画面の写真）</span>を素早く共有したい時、<span class="term">ローカルファイル（自分のコンピューター内のファイル）</span>を分析したい時、<span class="term">既存の画像ファイル</span>を参照したい時など、それぞれに最適な方法があるのです。</p>
+                </div>
+
+                <div class="method-grid">
+                    <div class="method-box">
+                        <div class="method-number">1</div>
+                        <div class="method-title">ドラッグ&ドロップ方式</div>
+                        <p><span class="term">ドラッグ&ドロップ</span>とは、マウスでファイルを「つかんで」「持ってきて」「離す」操作のことです。</p>
+                        <div class="code-example">
+                            <div class="command"># 操作手順</div>
+                            <div class="output">1. 画像ファイルをクリックして選択</div>
+                            <div class="output">2. マウスボタンを押したまま移動</div>
+                            <div class="output">3. Claude Codeウィンドウで離す</div>
+                        </div>
+                        <div class="tip-box">
+                            <p><strong>最適な場面：</strong>エクスプローラーやFinderで画像を見つけた時、複数の画像を一度に追加したい時</p>
+                        </div>
+                    </div>
+
+                    <div class="method-box">
+                        <div class="method-number">2</div>
+                        <div class="method-title">コピー&ペースト方式</div>
+                        <p><span class="term">クリップボード（一時的な記憶領域）</span>にコピーした画像を、<span class="term">ショートカットキー</span>で貼り付ける方法です。</p>
+                        <div class="code-example">
+                            <div class="command"># Windows/Linux</div>
+                            <div class="output">Ctrl + C (コピー) → Ctrl + V (ペースト)</div>
+                            <div class="command"># 注意：cmd + V は使用しない</div>
+                            <div class="error">❌ cmd + V (macOSでは非対応)</div>
+                        </div>
+                        <div class="tip-box">
+                            <p><strong>最適な場面：</strong>スクリーンショットを撮った直後、他のアプリから画像をコピーした時</p>
+                        </div>
+                    </div>
+
+                    <div class="method-box">
+                        <div class="method-number">3</div>
+                        <div class="method-title">ファイルパス指定方式</div>
+                        <p><span class="term">ファイルパス（ファイルの住所）</span>を直接テキストで指定する方法です。<span class="term">絶対パス（完全な住所）</span>または<span class="term">相対パス（現在地からの道順）</span>を使用します。</p>
+                        <div class="code-example">
+                            <div class="command"># 例：Claudeに画像パスを提供</div>
+                            <div class="output">「この画像を分析して：/path/to/your/image.png」</div>
+                            <div class="output">「このスクリーンショットを見て：./screenshots/error.jpg」</div>
+                        </div>
+                        <div class="tip-box">
+                            <p><strong>最適な場面：</strong>プロジェクトフォルダ内の画像を指定する時、自動化スクリプトで使用する時</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>📮 郵便配達で例えてみよう</h4>
+                    <p><strong>ドラッグ&ドロップ</strong>は、<span class="highlight">手渡しで荷物を届ける</span>ようなもの。直接相手に渡すので確実ですが、近くにいる必要があります。</p>
+                    <p><strong>コピー&ペースト</strong>は、<span class="highlight">一時的に荷物を預かり場所に置いて、後で取り出す</span>ようなもの。スピーディーですが、一時的な保管です。</p>
+                    <p><strong>ファイルパス指定</strong>は、<span class="highlight">住所を教えて取りに行ってもらう</span>ようなもの。正確な場所さえ分かれば、いつでもアクセスできます。</p>
+                </div>
+
+                <div class="mermaid">
+                    graph TD
+                        A[画像をClaude Codeに追加したい] --> B{どの方法を選ぶ？}
+                        
+                        B -->|ファイルが手元にある| C[ドラッグ&ドロップ]
+                        B -->|スクリーンショットを撮った| D[コピー&ペースト]
+                        B -->|ファイルパスが分かっている| E[パス指定]
+                        
+                        C --> F[エクスプローラー/Finderから<br/>Claude Codeウィンドウへ]
+                        D --> G[Ctrl+C → Ctrl+V<br/>※cmd+Vは非対応]
+                        E --> H[テキストでパスを入力<br/>/path/to/image.png]
+                        
+                        F --> I[✅ 画像が会話に追加される]
+                        G --> I
+                        H --> I
+                        
+                        style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+                        style D fill:#9575CD,stroke:#fff,stroke-width:2px,color:#fff
+                        style E fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+                        style I fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><span class="icon">🔍</span>Claudeに画像分析をしてもらう方法</h2>
+                <p>AI画像認識技術を活用した効果的な質問テクニック</p>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <div class="concept-title">結論：明確で具体的な質問がAI分析の精度を向上させる</div>
+                    <p><span class="term">AI画像認識（人工知能による画像理解技術）</span>は非常に高性能ですが、<span class="highlight">質問の仕方次第で回答の質が大きく変わります</span>。<span class="term">プロンプトエンジニアリング（AIへの効果的な指示方法）</span>を学ぶことで、より価値の高い分析結果を得ることができます。</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>なぜ質問の仕方が重要なのか？</h4>
+                    <p><span class="term">Claude</span>の<span class="term">コンピュータビジョン（コンピューターの視覚機能）</span>は、画像から膨大な情報を読み取ることができます。しかし、<span class="highlight">何に注目すべきかを明確に指示しないと、的外れな回答になる可能性</span>があります。人間同士の会話でも「これについて教えて」より「この部分の問題点を教えて」の方が有用な回答が得られるのと同じです。</p>
+                </div>
+
+                <div class="step-container">
+                    <h4>📋 効果的な画像分析質問の例</h4>
+                    <ul class="step-list">
+                        <li>
+                            <strong>基本的な画像内容確認</strong>
+                            <div class="code-example">
+                                <div class="command">この画像は何を示していますか？</div>
+                                <div class="output">→ 画像全体の概要と主要な要素を説明</div>
+                            </div>
+                            <p><span class="term">用途：</span>初見の画像内容を把握したい時、全体像を理解したい時</p>
+                        </li>
+                        <li>
+                            <strong>UI/UX要素の詳細分析</strong>
+                            <div class="code-example">
+                                <div class="command">このスクリーンショットのUI要素を説明して</div>
+                                <div class="output">→ ボタン、メニュー、レイアウトなどの詳細分析</div>
+                            </div>
+                            <p><span class="term">用途：</span>ウェブサイトやアプリの画面分析、<span class="term">ユーザビリティ（使いやすさ）</span>評価</p>
+                        </li>
+                        <li>
+                            <strong>問題点・改善点の特定</strong>
+                            <div class="code-example">
+                                <div class="command">この図に問題のある要素はありますか？</div>
+                                <div class="output">→ デザインやレイアウトの課題を指摘</div>
+                            </div>
+                            <p><span class="term">用途：</span><span class="term">品質保証（QA：Quality Assurance）</span>、デザインレビュー、バグ発見</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="comparison-container">
+                    <div class="bad-practice">
+                        <h4>❌ 効果の薄い質問例</h4>
+                        <div class="code-example">
+                            <div class="error">「この画像について教えて」</div>
+                            <div class="error">「何か気づくことはある？」</div>
+                            <div class="error">「分析して」</div>
+                        </div>
+                        <p>抽象的すぎて、具体性に欠ける</p>
+                    </div>
+                    <div class="vs-divider">VS</div>
+                    <div class="good-practice">
+                        <h4>✅ 効果的な質問例</h4>
+                        <div class="code-example">
+                            <div class="output">「このエラー画面の原因と解決策は？」</div>
+                            <div class="output">「このUIの操作性向上のヒントは？」</div>
+                            <div class="output">「このコードの問題箇所を指摘して」</div>
+                        </div>
+                        <p>目的が明確で、具体的な回答を期待</p>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🏥 医者の診察で例えてみよう</h4>
+                    <p>お医者さんに「体調が悪いです」と言うより、「<span class="highlight">昨日から頭痛と熱があり、特に午後に症状が悪化します</span>」と具体的に伝える方が、的確な診断と治療法を得られますよね。</p>
+                    <p>Claudeへの画像分析依頼も同じで、<span class="highlight">何を知りたいのか、どの部分に注目してほしいのか</span>を明確に伝えることで、より価値の高い分析結果を得ることができます。</p>
+                </div>
+
+                <div class="mermaid">
+                    graph TD
+                        A[画像分析を依頼したい] --> B[分析の目的を明確化]
+                        
+                        B --> C[概要把握]
+                        B --> D[問題発見]
+                        B --> E[改善提案]
+                        B --> F[技術分析]
+                        
+                        C --> G[「この画像は何を示していますか？」]
+                        D --> H[「このエラーの原因は何ですか？」]
+                        E --> I[「このUIの改善点はありますか？」]
+                        F --> J[「このコードの問題箇所は？」]
+                        
+                        G --> K[Claudeが全体的な説明を提供]
+                        H --> L[Claudeが具体的な原因を特定]
+                        I --> M[Claudeが改善案を提示]
+                        J --> N[Claudeが技術的な分析を実施]
+                        
+                        style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+                        style D fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+                        style E fill:#9575CD,stroke:#fff,stroke-width:2px,color:#fff
+                        style F fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><span class="icon">📋</span>コンテキストを活用した画像分析</h2>
+                <p>状況説明と画像を組み合わせた高度な問題解決手法</p>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <div class="concept-title">結論：コンテキスト（文脈情報）が分析精度を飛躍的に向上させる</div>
+                    <p><span class="term">コンテキスト</span>とは「<span class="highlight">状況や背景の説明</span>」のことです。単純に画像だけを見せるより、<span class="term">前後の状況や目的を説明</span>することで、Claudeはより的確で実用的な分析とアドバイスを提供できます。</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>なぜコンテキストが重要なのか？</h4>
+                    <p>同じ画像でも、見る人の<span class="term">立場（役割）</span>や<span class="term">目的</span>によって注目すべきポイントが変わります。<span class="term">エラーハンドリング（エラー対処）</span>が目的なのか、<span class="term">デザインレビュー（設計確認）</span>が目的なのか、<span class="term">機能追加（新機能開発）</span>が目的なのかで、Claudeが提供すべき情報が大きく異なるのです。</p>
+                </div>
+
+                <div class="use-case-grid">
+                    <div class="use-case">
+                        <h4>🐛 エラー解決コンテキスト</h4>
+                        <div class="code-example">
+                            <div class="command">これはエラーのスクリーンショットです。</div>
+                            <div class="command">何が原因ですか？</div>
+                        </div>
+                        <p><strong>効果：</strong>Claudeが<span class="term">エラーログ（エラー記録）</span>、<span class="term">スタックトレース（エラー発生経路）</span>、<span class="term">デバッグ情報</span>に焦点を当てて分析</p>
+                        <div class="workflow-step">
+                            <strong>分析の流れ：</strong>
+                            <ol>
+                                <li>エラーメッセージの内容解読</li>
+                                <li>エラーの種類分類（<span class="term">シンタックスエラー、ランタイムエラー</span>など）</li>
+                                <li>考えられる原因の特定</li>
+                                <li>具体的な解決手順の提示</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>🗄️ データベース設計コンテキスト</h4>
+                        <div class="code-example">
+                            <div class="command">これは現在のデータベーススキーマです。</div>
+                            <div class="command">新機能のためにどのように修正すべきですか？</div>
+                        </div>
+                        <p><strong>効果：</strong>Claudeが<span class="term">テーブル構造</span>、<span class="term">リレーション（関連性）</span>、<span class="term">正規化（データ整理）</span>の観点で分析</p>
+                        <div class="workflow-step">
+                            <strong>分析の流れ：</strong>
+                            <ol>
+                                <li>現在のスキーマ構造の理解</li>
+                                <li>新機能に必要なデータ要素の特定</li>
+                                <li><span class="term">マイグレーション（データ移行）</span>戦略の提案</li>
+                                <li>パフォーマンス影響の評価</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>🎨 デザイン分析コンテキスト</h4>
+                        <div class="code-example">
+                            <div class="command">これはUIのモックアップです。</div>
+                            <div class="command">実装上の課題はありますか？</div>
+                        </div>
+                        <p><strong>効果：</strong>Claudeが<span class="term">レスポンシブデザイン</span>、<span class="term">アクセシビリティ</span>、<span class="term">実装可能性</span>を総合的に評価</p>
+                        <div class="workflow-step">
+                            <strong>分析の流れ：</strong>
+                            <ol>
+                                <li>デザイン要素の技術的実現性評価</li>
+                                <li><span class="term">ユーザビリティ</span>の観点からの改善提案</li>
+                                <li>実装に必要な技術スタックの特定</li>
+                                <li>開発工数の概算</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>📊 データ可視化コンテキスト</h4>
+                        <div class="code-example">
+                            <div class="command">これは売上データのグラフです。</div>
+                            <div class="command">トレンドの解釈と改善案を教えて</div>
+                        </div>
+                        <p><strong>効果：</strong>Claudeが<span class="term">統計分析</span>、<span class="term">ビジネスインサイト</span>、<span class="term">改善戦略</span>の観点で分析</p>
+                        <div class="workflow-step">
+                            <strong>分析の流れ：</strong>
+                            <ol>
+                                <li>データパターンの識別</li>
+                                <li>統計的有意性の評価</li>
+                                <li>ビジネス要因との関連性分析</li>
+                                <li>アクションプランの提案</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🔍 探偵の捜査で例えてみよう</h4>
+                    <p>探偵が証拠写真を見る時、<span class="highlight">「これは殺人事件の現場です」</span>と言われるのと、何の説明もなく写真だけ渡されるのでは、注目するポイントが全く違いますよね。</p>
+                    <p>コンテキストがあれば、探偵は<span class="highlight">凶器の痕跡、犯人の足跡、時間的な手がかり</span>に集中できます。Claudeも同じで、目的や状況を教えてもらうことで、より的確な「捜査」ができるのです。</p>
+                </div>
+
+                <div class="mermaid">
+                    graph TD
+                        A[画像 + コンテキスト] --> B[Claudeの分析プロセス]
+                        
+                        B --> C[コンテキストの理解]
+                        C --> D[目的に応じた視点設定]
+                        D --> E[画像の詳細分析]
+                        E --> F[専門的な知識の適用]
+                        F --> G[実用的な回答の生成]
+                        
+                        H[エラー解決コンテキスト] --> I[技術的デバッグ視点]
+                        J[デザイン分析コンテキスト] --> K[UX/UI評価視点]
+                        L[データ分析コンテキスト] --> M[統計・ビジネス視点]
+                        
+                        I --> D
+                        K --> D
+                        M --> D
+                        
+                        style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+                        style G fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                        style I fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+                        style K fill:#9575CD,stroke:#fff,stroke-width:2px,color:#fff
+                        style M fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><span class="icon">⚡</span>視覚的コンテンツからコード生成</h2>
+                <p>デザインモックアップやUI図面から実装可能なコードを自動生成</p>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <div class="concept-title">結論：デザインからコードへの変換でプロトタイピング時間を90%短縮</div>
+                    <p><span class="term">デザインtoコード（Design-to-Code）</span>技術により、<span class="highlight">視覚的なデザインを実装可能なコードに自動変換</span>できます。<span class="term">プロトタイピング（試作品作成）</span>や<span class="term">MVP（Minimum Viable Product：最小限の実用性を持つ製品）</span>開発で特に威力を発揮します。</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>なぜデザインからコード生成が革命的なのか？</h4>
+                    <p>従来の開発フローでは、<span class="term">デザイナー</span>が作成したモックアップを<span class="term">フロントエンドエンジニア</span>が手動でコード化していました。この過程で<span class="highlight">解釈のズレ、実装時間の長期化、デザインとコードの不一致</span>などの問題が発生していました。AI技術により、この工程を大幅に効率化できるようになったのです。</p>
+                </div>
+
+                <div class="step-container">
+                    <h4>🎯 効果的なコード生成の手順</h4>
+                    <ul class="step-list">
+                        <li>
+                            <strong>CSS生成リクエスト</strong>
+                            <div class="code-example">
+                                <div class="command">このデザインモックアップに合うCSSを生成して</div>
+                                <div class="output">→ レイアウト、カラー、タイポグラフィを含む完全なCSS</div>
+                            </div>
+                            <p><span class="term">対象：</span><span class="term">スタイルシート（見た目の定義）</span>、<span class="term">レスポンシブデザイン（画面サイズ対応）</span>、<span class="term">アニメーション効果</span></p>
+                        </li>
+                        <li>
+                            <strong>HTML構造生成</strong>
+                            <div class="code-example">
+                                <div class="command">このコンポーネントを再現するHTMLの構造は何ですか？</div>
+                                <div class="output">→ セマンティックHTML + アクセシビリティ対応</div>
+                            </div>
+                            <p><span class="term">対象：</span><span class="term">マークアップ（文書構造）</span>、<span class="term">セマンティック要素（意味のある要素）</span>、<span class="term">アクセシビリティ（利用しやすさ）</span></p>
+                        </li>
+                        <li>
+                            <strong>JavaScript機能実装</strong>
+                            <div class="code-example">
+                                <div class="command">このUIの動的な動作を実装するJavaScriptを作成して</div>
+                                <div class="output">→ イベントハンドリング + インタラクション機能</div>
+                            </div>
+                            <p><span class="term">対象：</span><span class="term">イベント処理（クリック、スクロールなど）</span>、<span class="term">DOM操作（要素の変更）</span>、<span class="term">API連携</span></p>
+                        </li>
+                        <li>
+                            <strong>フレームワーク対応コード</strong>
+                            <div class="code-example">
+                                <div class="command">このデザインをReact/Vue/Angularコンポーネントで実装して</div>
+                                <div class="output">→ フレームワーク固有の最適化されたコード</div>
+                            </div>
+                            <p><span class="term">対象：</span><span class="term">コンポーネント設計</span>、<span class="term">状態管理（State Management）</span>、<span class="term">プロップス設計</span></p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="comparison-container">
+                    <div class="bad-practice">
+                        <h4>❌ 従来の手動実装</h4>
+                        <ul>
+                            <li>デザイン解釈に数時間</li>
+                            <li>コード作成に1-2日</li>
+                            <li>デザイナーとの調整で往復</li>
+                            <li>ブラウザ対応確認で追加時間</li>
+                        </ul>
+                        <p><strong>合計：3-5日</strong></p>
+                    </div>
+                    <div class="vs-divider">VS</div>
+                    <div class="good-practice">
+                        <h4>✅ AI支援による実装</h4>
+                        <ul>
+                            <li>即座にコード生成</li>
+                            <li>微調整に30分-1時間</li>
+                            <li>複数案を瞬時に比較</li>
+                            <li>ベストプラクティス自動適用</li>
+                        </ul>
+                        <p><strong>合計：半日以内</strong></p>
+                    </div>
+                </div>
+
+                <div class="use-case-grid">
+                    <div class="use-case">
+                        <h4>🎨 デザインカンプ変換</h4>
+                        <p><span class="term">デザインカンプ（完成デザイン）</span>を<span class="term">Figma</span>、<span class="term">Adobe XD</span>、<span class="term">Sketch</span>から画像でエクスポートし、そのままコード化</p>
+                        <div class="tip-box">
+                            <p><strong>コツ：</strong>レイヤー構造や使用フォント情報も一緒に提供すると、より精密なコードが生成される</p>
+                        </div>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>📱 モバイルアプリUI</h4>
+                        <p><span class="term">モバイルアプリ</span>のスクリーンショットから、<span class="term">React Native</span>、<span class="term">Flutter</span>、<span class="term">Ionic</span>のコード生成</p>
+                        <div class="tip-box">
+                            <p><strong>コツ：</strong>対象デバイス（iOS/Android）とフレームワークを明確に指定する</p>
+                        </div>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>🖥️ Webサイトレイアウト</h4>
+                        <p>ワイヤーフレームやモックアップから、<span class="term">レスポンシブ対応</span>の<span class="term">HTML/CSS/JavaScript</span>を生成</p>
+                        <div class="tip-box">
+                            <p><strong>コツ：</strong>ブラウザ対応範囲とCSSフレームワーク（Bootstrap、Tailwindなど）の使用有無を指定</p>
+                        </div>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>🔧 コンポーネントライブラリ</h4>
+                        <p><span class="term">デザインシステム</span>の各コンポーネントを、再利用可能な<span class="term">ライブラリコード</span>として生成</p>
+                        <div class="tip-box">
+                            <p><strong>コツ：</strong>PropTypesやTypeScript型定義も同時に生成してもらうと保守性が向上</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🏗️ 建築設計図で例えてみよう</h4>
+                    <p>建築家が描いた設計図を見て、大工さんが実際の建物を建てるようなものです。従来は<span class="highlight">大工さんが設計図を一つ一つ解釈しながら手作業</span>で建築していました。</p>
+                    <p>AIによるコード生成は、<span class="highlight">設計図を3Dプリンターに渡すと自動で建物ができる</span>ような革命的な変化です。ただし、最終的な微調整や品質確認は、やはり人間の専門家が必要です。</p>
+                </div>
+
+                <div class="mermaid">
+                    graph TD
+                        A[デザインファイル/画像] --> B[Claude Codeにアップロード]
+                        B --> C[コード生成リクエスト]
+                        
+                        C --> D[CSS生成]
+                        C --> E[HTML生成]
+                        C --> F[JavaScript生成]
+                        C --> G[フレームワーク対応]
+                        
+                        D --> H[スタイルシート<br/>レスポンシブ対応<br/>アニメーション]
+                        E --> I[セマンティックHTML<br/>アクセシビリティ<br/>SEO最適化]
+                        F --> J[イベント処理<br/>DOM操作<br/>API連携]
+                        G --> K[React/Vue/Angular<br/>コンポーネント<br/>状態管理]
+                        
+                        H --> L[プロトタイプ完成]
+                        I --> L
+                        J --> L
+                        K --> L
+                        
+                        L --> M[テスト・調整・デプロイ]
+                        
+                        style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+                        style L fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                        style M fill:#9575CD,stroke:#fff,stroke-width:2px,color:#fff
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><span class="icon">💡</span>プロのためのヒントとベストプラクティス</h2>
+                <p>画像分析機能を最大限活用するための実践的テクニック集</p>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <div class="concept-title">結論：戦略的な画像活用でプロダクトの開発効率を最大化</div>
+                    <p><span class="term">ベストプラクティス（最良の実践方法）</span>を身につけることで、Claude Codeの画像分析機能は単なる<span class="term">便利ツール</span>から<span class="highlight">開発フローの中核的な生産性向上ツール</span>に変わります。</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>なぜプロのテクニックが必要なのか？</h4>
+                    <p>AI技術は道具です。同じ道具でも、<span class="term">初心者</span>と<span class="term">プロフェッショナル</span>では成果物の質が大きく異なります。<span class="term">プロンプトエンジニアリング</span>、<span class="term">ワークフロー最適化</span>、<span class="term">品質管理</span>の技術を身につけることで、競争優位を築くことができます。</p>
+                </div>
+
+                <div class="step-container">
+                    <h4>🎯 効果的な活用シーンの特定</h4>
+                    <ul class="step-list">
+                        <li>
+                            <strong>デバッグ・トラブルシューティング最適化</strong>
+                            <p><span class="term">スタックオーバーフロー</span>で調べるより速く、より的確な解決策を得られる場面を特定しましょう。</p>
+                            <div class="tip-box">
+                                <p><strong>効果的な場面：</strong>複雑なエラーメッセージ、ブラウザの開発者ツール画面、ログファイルの分析</p>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>UI/UXレビューの効率化</strong>
+                            <p><span class="term">デザインレビュー会議</span>の事前準備として、問題点の洗い出しを自動化できます。</p>
+                            <div class="tip-box">
+                                <p><strong>効果的な場面：</strong>ワイヤーフレーム評価、競合分析、アクセシビリティチェック</p>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>ドキュメント化の自動化</strong>
+                            <p>画面キャプチャから<span class="term">技術仕様書</span>や<span class="term">操作マニュアル</span>の下書きを自動生成できます。</p>
+                            <div class="tip-box">
+                                <p><strong>効果的な場面：</strong>API仕様書作成、ユーザーマニュアル更新、リリースノート作成</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="use-case-grid">
+                    <div class="use-case">
+                        <h4>🔍 画質と解像度の最適化</h4>
+                        <p><span class="term">画像解析精度</span>は画質に大きく依存します。</p>
+                        <ul>
+                            <li><strong>推奨解像度：</strong>1920x1080以上</li>
+                            <li><strong>ファイル形式：</strong>PNG > JPG > WebP</li>
+                            <li><strong>圧縮率：</strong>可能な限り低圧縮</li>
+                        </ul>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>📝 複数画像の効果的な管理</h4>
+                        <p>一つの会話で複数画像を扱う際の<span class="term">ベストプラクティス</span></p>
+                        <ul>
+                            <li><strong>順序付け：</strong>「1枚目は〜、2枚目は〜」と明示</li>
+                            <li><strong>関連性説明：</strong>画像間の関係を明確化</li>
+                            <li><strong>比較分析：</strong>Before/After形式で変更点を強調</li>
+                        </ul>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>⚡ リアルタイム分析の活用</h4>
+                        <p><span class="term">開発中</span>のリアルタイムフィードバック</p>
+                        <ul>
+                            <li><strong>コードレビュー：</strong>プルリクエスト画面の分析</li>
+                            <li><strong>テスト結果：</strong>CI/CDパイプライン画面の確認</li>
+                            <li><strong>パフォーマンス：</strong>プロファイラー結果の解釈</li>
+                        </ul>
+                    </div>
+
+                    <div class="use-case">
+                        <h4>🔒 セキュリティと機密情報</h4>
+                        <p><span class="term">機密情報</span>を含む画像の安全な取り扱い</p>
+                        <ul>
+                            <li><strong>マスキング：</strong>個人情報や機密データの隠蔽</li>
+                            <li><strong>サニタイゼーション：</strong>APIキーやパスワードの除去</li>
+                            <li><strong>部分的クロップ：</strong>必要な部分のみを切り取り</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="comparison-container">
+                    <div class="bad-practice">
+                        <h4>❌ 避けるべき使い方</h4>
+                        <ul>
+                            <li><strong>低品質画像の使用</strong><br>ぼやけた画像では正確な分析不可</li>
+                            <li><strong>機密情報の露出</strong><br>個人情報やAPIキーが写り込み</li>
+                            <li><strong>曖昧な質問</strong><br>「なんか変」「おかしい」等の抽象的表現</li>
+                            <li><strong>コンテキスト不足</strong><br>画像だけで背景説明なし</li>
+                        </ul>
+                    </div>
+                    <div class="vs-divider">VS</div>
+                    <div class="good-practice">
+                        <h4>✅ 推奨される使い方</h4>
+                        <ul>
+                            <li><strong>高解像度画像の活用</strong><br>テキストが鮮明に読める品質</li>
+                            <li><strong>適切な情報保護</strong><br>機密データのマスキング処理</li>
+                            <li><strong>具体的な質問</strong><br>目的と期待する回答を明確化</li>
+                            <li><strong>十分なコンテキスト</strong><br>状況説明と目的の共有</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🎬 映画監督の撮影技法で例えてみよう</h4>
+                    <p>映画監督は同じカメラを使っても、<span class="highlight">アングル、照明、構図</span>などの技法によって、全く異なる印象の映像を作り出します。</p>
+                    <p>Claude Codeでの画像分析も同じで、<span class="highlight">画像の選び方、質問の仕方、コンテキストの提供方法</span>によって、得られる価値が大きく変わります。プロの技法を身につけることで、AI技術を最大限活用できるのです。</p>
+                </div>
+
+                <div class="mermaid">
+                    graph TD
+                        A[プロレベルの画像分析活用] --> B[戦略的準備]
+                        
+                        B --> C[高品質画像の準備]
+                        B --> D[明確な目的設定]
+                        B --> E[適切なコンテキスト]
+                        B --> F[セキュリティ考慮]
+                        
+                        C --> G[解像度最適化<br/>ファイル形式選択<br/>圧縮設定]
+                        D --> H[具体的質問設計<br/>期待値明確化<br/>成果物定義]
+                        E --> I[背景情報提供<br/>技術スタック説明<br/>制約条件共有]
+                        F --> J[機密情報マスキング<br/>アクセス権限確認<br/>データ保護]
+                        
+                        G --> K[最高品質の分析結果]
+                        H --> K
+                        I --> K
+                        J --> K
+                        
+                        K --> L[開発効率大幅向上<br/>品質向上<br/>競争優位確立]
+                        
+                        style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+                        style K fill:#FFC107,stroke:#333,stroke-width:2px,color:#333
+                        style L fill:#9575CD,stroke:#fff,stroke-width:2px,color:#fff
+                </div>
+            </div>
+        </section>
+
+        <section class="summary-box">
+            <h3>🎉 Claude Code画像分析機能 完全マスター</h3>
+            <div style="text-align: left; max-width: 1000px; margin: 0 auto; font-size: 1.1rem; line-height: 2;">
+                <p>✅ <strong>3つの画像追加方法</strong>をマスター：ドラッグ&ドロップ、コピー&ペースト、パス指定</p>
+                <p>✅ <strong>効果的な質問技法</strong>で分析精度を最大化：具体的で目的明確な質問</p>
+                <p>✅ <strong>コンテキスト活用</strong>で専門的分析を実現：状況説明 + 画像の組み合わせ</p>
+                <p>✅ <strong>デザインtoコード生成</strong>でプロトタイピング時間を90%短縮</p>
+                <p>✅ <strong>プロのベストプラクティス</strong>で開発フロー全体を最適化</p>
+                <p style="margin-top: 30px; text-align: center; font-size: 1.2rem; color: #FFE082;">
+                    <strong>🚀 これで画像分析を活用した次世代開発フローの完成です！</strong>
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
